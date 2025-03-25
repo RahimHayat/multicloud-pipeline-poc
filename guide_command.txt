@@ -1,0 +1,55 @@
+Terraform
+
+Once LocalStack or Cloud are ready.
+We can apply, it will create our ressources simulated in LocalStack.
+> terraform init
+
+> terraform apply
+access to the link localhost:port (port specified in main.tf terraform config file)
+
+> terraform destroy
+
+——————————————————————————————
+
+LocalStack
+
+Run without any config : > localstack start -d
+To see instances, first install awscli-local then : > awslocal ec2 describe-instances 
+To stop : > localstack stop
+
+Run using docker command :
+> docker run --rm -d --name localstack_main \
+  -p 4566:4566 -p 4510-4559:4510-4559 \
+  -e SERVICES=s3,ec2 \
+  localstack/localstack
+
+Check available services : > curl http://localhost:4566/_localstack/health
+our services has to set to "running" status
+
+For testing S3 :
+> awslocal s3 ls s3://my-website-bucket # A voir ça marchait pas
+
+To stop the docker container : > docker stop localstack_main
+To delete it : > docker rm localstack_main
+
+Public url : http://my-website-bucket.s3-website.localhost:4566/index.html
+Curl command : > curl -H "Host: my-website-bucket.s3-website.localhost" http://localhost:4566/index.html
+
+Main difference between both command, AWS native (aws + credential) and for LocalStack (awslocal)
+
+Need to install awscli-local for the commands below.
+
+usefull command for EC2 :
+> awslocal ec2 describe-instances # List EC2 instances
+> awslocal ec2 describe-images --owners self # List available AMIs
+> awslocal ec2 describe-regions --owners self # List available regions
+> awslocal ec2 describe-vpcs # List created VPCs
+
+usefull command for S3 :
+> awslocal s3 ls # List buckets
+> awslocal s3 ls s3://my-website-bucket # List the contents of a bucket
+> awslocal s3 mb s3://my-website-bucket # Create bucket
+> awslocal s3 cp index.html s3://my-website-bucket/ # Upload file
+> awslocal s3 cp s3://my-website-bucket/index.html . # Download file
+> awslocal s3 rm s3://my-website-bucket/index.html # Delete file
+> awslocal s3 rb s3://my-website-bucket --force # Delete bucket
