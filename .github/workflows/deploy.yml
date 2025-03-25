@@ -54,11 +54,16 @@ jobs:
           echo "Deploying to LocalStack AWS S3 and EC2..."
           # Add more commands if needed to deploy to S3 or EC2, like updating an S3 bucket content
 
-      # Step 8: Deploy to GCP (this is a placeholder for now)
+      # Step 8: Verify deployment using curl
+      - name: 📡 Verify deployment
+        run: |
+          curl --fail http://my-website-bucket.s3-website.localhost:4566/index.html
+
+      # Step 9: Deploy to GCP (this is a placeholder for now)
       - name: 🌍 Deploy to GCP
         run: |
           echo "Deploying to GCP..." # Replace with real steps to deploy to GCP (e.g., Cloud Storage or Compute Engine)
 
-      # Step 9: Check if everything went well
+      # Step 10: Check if everything went well
       - name: ✅ Check deployment status
         run: echo "Deployment complete."
