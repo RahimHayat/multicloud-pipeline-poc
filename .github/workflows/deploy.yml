@@ -57,6 +57,10 @@ jobs:
       # Step 8: Verify deployment using curl
       - name: 📡 Verify deployment
         run: |
+          # Check if the bucket exists with awslocal
+          awslocal s3 ls s3://my-website-bucket/
+
+          # Verify accessibility of the website with curl
           curl --fail http://my-website-bucket.s3-website.localhost:4566/index.html
 
       # Step 9: Deploy to GCP (this is a placeholder for now)

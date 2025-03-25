@@ -27,7 +27,7 @@ Check available services : > curl http://localhost:4566/_localstack/health
 our services has to set to "running" status
 
 For testing S3 :
-> awslocal s3 ls s3://my-website-bucket # A voir ça marchait pas
+> awslocal s3 ls s3://my-website-bucket
 
 To stop the docker container : > docker stop localstack_main
 To delete it : > docker rm localstack_main

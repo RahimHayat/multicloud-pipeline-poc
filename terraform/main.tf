@@ -34,12 +34,12 @@ resource "aws_s3_bucket_website_configuration" "website_config" {
 }
 
 # Uploader automatiquement tous les fichiers du dossier "frontend" sur S3
-# ensuite remplacer par : multicloud-pipeline-poc
+# chemin relatif vers le dossier frontend/, à remplacer par : multicloud-pipeline-poc
 resource "aws_s3_object" "website_files" {
-  for_each     = fileset("frontend", "**/*")
+  for_each     = fileset("../frontend", "**/*")
   bucket       = aws_s3_bucket.website_bucket.id
   key          = each.value
-  source       = "frontend/${each.value}"
+  source       = "../frontend/${each.value}"
   content_type = "text/html"
 }
 
