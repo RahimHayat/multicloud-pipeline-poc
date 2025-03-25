@@ -57,6 +57,9 @@ jobs:
       # Step 8: Verify deployment using curl
       - name: 📡 Verify deployment
         run: |
+          # Install awscli-local
+          pip install awscli-local
+
           # Check if the bucket exists with awslocal
           awslocal s3 ls s3://my-website-bucket/
 
