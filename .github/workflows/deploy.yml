@@ -3,24 +3,24 @@ name: "CI/CD Multicloud with LocalStack"
 on:
   push:
     branches:
-      - main # Déclenche le workflow à chaque push sur "main"
+      - main # Trigger the workflow on push to the "main" branch
 
 jobs:
   terraform:
     runs-on: ubuntu-latest
 
     steps:
-      # Étape 1: Checkout du repository
+      # Step 1: Checkout the repository
       - name: 📥 Checkout repository
         uses: actions/checkout@v4
 
-      # Étape 2: Installer Terraform
+      # Step 2: Set up Terraform
       - name: 🏗️ Set up Terraform
         uses: hashicorp/setup-terraform@v3
         with:
           terraform_version: 1.5.7
 
-      # Étape 3: Installer et démarrer LocalStack
+      # Step 3: Install and start LocalStack
       - name: 🔧 Install LocalStack
         run: |
           docker run --rm -d --name localstack_main \
@@ -28,31 +28,37 @@ jobs:
             -e SERVICES=s3,ec2 \
             localstack/localstack
 
-      # Étape 4: Initialiser Terraform
+      # Step 4: Initialize Terraform
       - name: 🚀 Terraform Init
-        run: terraform init
+        run: |
+          cd terraform # Change directory to the terraform folder where main.tf is located
+          terraform init
 
-      # Étape 5: Planifier les changements avec Terraform
+      # Step 5: Plan changes with Terraform
       #- name: 📜 Terraform Plan
-      #  run: terraform plan
+      #  run: |
+      #    cd terraform # Ensure we're in the terraform directory
+      #    terraform plan
 
-      # Étape 6: Appliquer les changements (création des ressources) avec Terraform
+      # Step 6: Apply changes (create resources) with Terraform
       - name: ✅ Terraform Apply
-        run: terraform apply -auto-approve
+        run: |
+          cd terraform # Ensure we're in the terraform directory
+          terraform apply -auto-approve
 
-      # Étape 7: Déployer sur AWS via LocalStack
+      # Step 7: Deploy to AWS via LocalStack
       - name: 🌍 Deploy to AWS (LocalStack)
         run: |
-          # Vérifier si LocalStack est bien démarré
+          # Check if LocalStack is running
           docker ps
           echo "Deploying to LocalStack AWS S3 and EC2..."
-          # Ajouter d'autres commandes si nécessaire pour déployer dans S3 ou EC2, comme la mise à jour du contenu d'un bucket S3
+          # Add more commands if needed to deploy to S3 or EC2, like updating an S3 bucket content
 
-      # Étape 8: Déployer vers GCP (cela reste un placeholder pour l'instant)
+      # Step 8: Deploy to GCP (this is a placeholder for now)
       - name: 🌍 Deploy to GCP
         run: |
-          echo "Deploying to GCP..." # Remplacer par les étapes réelles pour déployer sur GCP (par exemple, Cloud Storage ou Compute Engine)
+          echo "Deploying to GCP..." # Replace with real steps to deploy to GCP (e.g., Cloud Storage or Compute Engine)
 
-      # Étape 9: Vérifier si tout s'est bien déroulé
+      # Step 9: Check if everything went well
       - name: ✅ Check deployment status
         run: echo "Deployment complete."
